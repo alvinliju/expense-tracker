@@ -24,10 +24,11 @@ const fakeExpenses:Expense[] = [
     {id:3, title:"Water", amount:200}
 ]
 
-export const expenseRoute = new Hono()
+export const expensesRoute = new Hono()
 .get('/', (c) => {
     return c.json({fakeExpenses})
 })
+
 .post('/',zValidator('json', createPostSchema), async (c) => {
      //how we retrive data from requests and using zod for validation
     const expense = await c.req.valid('json')
