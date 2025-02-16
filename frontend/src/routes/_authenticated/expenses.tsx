@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { api } from "../lib/api";
+import { api } from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import {
@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export const Route = createFileRoute("/expenses")({
+export const Route = createFileRoute("/_authenticated/expenses")({
   component: expenses,
 });
 
@@ -38,7 +38,7 @@ function expenses() {
   });
 
   return (
-    <div className="w-full min-w-screen max-w-full">
+    <div className="w-full min-w-screen max-w-full p-6">
       <Table className="max-w-3xl m-auto">
         <TableCaption>A list of your recent expenses.</TableCaption>
         <TableHeader>

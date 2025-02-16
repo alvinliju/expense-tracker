@@ -2,10 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Input } from "@/components/ui/input";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
-import {api} from '../lib/api'
+import {api} from '@/lib/api'
 import { useNavigate } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/create-expenses")({
+export const Route = createFileRoute("/_authenticated/create-expenses")({
   component: CreateExpense,
 });
 
@@ -31,7 +31,7 @@ function CreateExpense() {
   return (
     <div className="">
       <form
-        className="max-w-xl m-auto"
+        className="max-w-xl m-auto p-6"
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -83,7 +83,7 @@ function CreateExpense() {
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
-            <Button type="submit" disabled={!canSubmit}>
+            <Button type="submit" className="mt-4 items-center" disabled={!canSubmit}>
               {isSubmitting ? "..." : "Submit"}
             </Button>
           )}

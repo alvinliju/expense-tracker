@@ -11,24 +11,14 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as ExpensesImport } from './routes/expenses'
-import { Route as CreateExpensesImport } from './routes/create-expenses'
 import { Route as AboutImport } from './routes/about'
-import { Route as IndexImport } from './routes/index'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedExpensesImport } from './routes/_authenticated/expenses'
+import { Route as AuthenticatedCreateExpensesImport } from './routes/_authenticated/create-expenses'
 
 // Create/Update Routes
-
-const ExpensesRoute = ExpensesImport.update({
-  id: '/expenses',
-  path: '/expenses',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const CreateExpensesRoute = CreateExpensesImport.update({
-  id: '/create-expenses',
-  path: '/create-expenses',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const AboutRoute = AboutImport.update({
   id: '/about',
@@ -36,21 +26,45 @@ const AboutRoute = AboutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRoute,
 } as any)
+
+const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedExpensesRoute = AuthenticatedExpensesImport.update({
+  id: '/expenses',
+  path: '/expenses',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedCreateExpensesRoute =
+  AuthenticatedCreateExpensesImport.update({
+    id: '/create-expenses',
+    path: '/create-expenses',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
     '/about': {
@@ -60,68 +74,108 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
-    '/create-expenses': {
-      id: '/create-expenses'
+    '/_authenticated/create-expenses': {
+      id: '/_authenticated/create-expenses'
       path: '/create-expenses'
       fullPath: '/create-expenses'
-      preLoaderRoute: typeof CreateExpensesImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedCreateExpensesImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/expenses': {
-      id: '/expenses'
+    '/_authenticated/expenses': {
+      id: '/_authenticated/expenses'
       path: '/expenses'
       fullPath: '/expenses'
-      preLoaderRoute: typeof ExpensesImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedExpensesImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexImport
+      parentRoute: typeof AuthenticatedImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedCreateExpensesRoute: typeof AuthenticatedCreateExpensesRoute
+  AuthenticatedExpensesRoute: typeof AuthenticatedExpensesRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedCreateExpensesRoute: AuthenticatedCreateExpensesRoute,
+  AuthenticatedExpensesRoute: AuthenticatedExpensesRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
-  '/create-expenses': typeof CreateExpensesRoute
-  '/expenses': typeof ExpensesRoute
+  '/create-expenses': typeof AuthenticatedCreateExpensesRoute
+  '/expenses': typeof AuthenticatedExpensesRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/create-expenses': typeof CreateExpensesRoute
-  '/expenses': typeof ExpensesRoute
+  '/create-expenses': typeof AuthenticatedCreateExpensesRoute
+  '/expenses': typeof AuthenticatedExpensesRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
-  '/create-expenses': typeof CreateExpensesRoute
-  '/expenses': typeof ExpensesRoute
+  '/_authenticated/create-expenses': typeof AuthenticatedCreateExpensesRoute
+  '/_authenticated/expenses': typeof AuthenticatedExpensesRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/create-expenses' | '/expenses'
+  fullPaths: '' | '/about' | '/create-expenses' | '/expenses' | '/profile' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/create-expenses' | '/expenses'
-  id: '__root__' | '/' | '/about' | '/create-expenses' | '/expenses'
+  to: '/about' | '/create-expenses' | '/expenses' | '/profile' | '/'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/about'
+    | '/_authenticated/create-expenses'
+    | '/_authenticated/expenses'
+    | '/_authenticated/profile'
+    | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AboutRoute: typeof AboutRoute
-  CreateExpensesRoute: typeof CreateExpensesRoute
-  ExpensesRoute: typeof ExpensesRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AboutRoute: AboutRoute,
-  CreateExpensesRoute: CreateExpensesRoute,
-  ExpensesRoute: ExpensesRoute,
 }
 
 export const routeTree = rootRoute
@@ -134,23 +188,37 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/about",
-        "/create-expenses",
-        "/expenses"
+        "/_authenticated",
+        "/about"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/create-expenses",
+        "/_authenticated/expenses",
+        "/_authenticated/profile",
+        "/_authenticated/"
+      ]
     },
     "/about": {
       "filePath": "about.tsx"
     },
-    "/create-expenses": {
-      "filePath": "create-expenses.tsx"
+    "/_authenticated/create-expenses": {
+      "filePath": "_authenticated/create-expenses.tsx",
+      "parent": "/_authenticated"
     },
-    "/expenses": {
-      "filePath": "expenses.tsx"
+    "/_authenticated/expenses": {
+      "filePath": "_authenticated/expenses.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/profile": {
+      "filePath": "_authenticated/profile.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/": {
+      "filePath": "_authenticated/index.tsx",
+      "parent": "/_authenticated"
     }
   }
 }

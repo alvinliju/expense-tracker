@@ -26,6 +26,7 @@
       }
     }`
 ``
+```
 
 - Understanding Hono RPC:
   - Hono RPC (Remote Procedure Call) allows type-safe API calls between client and server
@@ -51,3 +52,4 @@
       json: { amount: 100 } 
     })
     
+    - you can only use a hook inside a component 
