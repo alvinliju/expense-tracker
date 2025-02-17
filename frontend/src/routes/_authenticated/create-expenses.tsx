@@ -68,8 +68,7 @@ function CreateExpense() {
                   name={field.name}
                   value={field.state.value}
                   onBlur={field.handleBlur}
-                  type="number"
-                  onChange={(e) => field.handleChange(Number(e.target.value))}
+                  onChange={(e) => field.handleChange((e.target.value).toString())}
                 />
                 {field.state.meta.errors ? (
                   <p className="text-red-500 text-center" role="alert">

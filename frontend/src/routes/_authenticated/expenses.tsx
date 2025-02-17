@@ -37,6 +37,8 @@ function expenses() {
     queryFn: getExpenses,
   });
 
+  console.log(data?.expenses)
+
   return (
     <div className="w-full min-w-screen max-w-full p-6">
       <Table className="max-w-3xl m-auto">
@@ -77,7 +79,7 @@ function expenses() {
         )}
 
         <TableBody>
-          {data?.fakeExpenses.map((expenses) => (
+          {data?.expenses.map((expenses) => (
             <TableRow key={expenses.id} >
               <TableCell className="font-medium">{expenses.id}</TableCell>
               <TableCell className="font-medium">{expenses.title}</TableCell>

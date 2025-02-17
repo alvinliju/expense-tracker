@@ -6,7 +6,7 @@ const client = hc<ApiRoutes>('/')
 
 export const api = client.api
 
-async function gerCurrentUser(){
+async function getCurrentUser(){
     try{
         const res = await api.me.$get()
     if(!res.ok){
@@ -29,6 +29,6 @@ async function gerCurrentUser(){
 
 export const userQueryOptions = queryOptions(
     { queryKey: ['get-user-profile'], 
-        queryFn: gerCurrentUser,
+        queryFn: getCurrentUser,
         staleTime:Infinity
      })
