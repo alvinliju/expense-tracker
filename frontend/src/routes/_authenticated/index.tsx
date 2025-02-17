@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-
 import {
   Card,
   CardContent,
@@ -11,10 +10,13 @@ import {
 
 import {api} from '@/lib/api'
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 export const Route = createFileRoute('/_authenticated/')({
     component: Index,
 })
+
+
 
 async function getTotalSpend(){
   const res = await api.expenses['total-spend'].$get()
@@ -24,6 +26,7 @@ async function getTotalSpend(){
   const data = await res.json()
   return data
 }
+
 
 function Index() {
   const {isPending, error, data, isFetching}= useQuery({ queryKey: ['get-total-spend'], queryFn: getTotalSpend })
