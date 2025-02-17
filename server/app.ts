@@ -16,7 +16,7 @@ const apiRoutes = app.basePath('/api').route('/expenses', expensesRoute).route('
 app.get('*', serveStatic({ root: './frontend/dist' }))
 
 //SPA fallback for all the routes this allows the SPA to handle the routes internally
-app.get('*', serveStatic({ path: './frontend/static/dist/index.html' }))
+app.get('*', serveStatic({ path: './frontend/dist/index.html' }))
 
 
 
